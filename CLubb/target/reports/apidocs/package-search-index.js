@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.aleja.clubb"},{"l":"com.aleja.clubb.exceptions.exceptions"}];updateSearchResults();
