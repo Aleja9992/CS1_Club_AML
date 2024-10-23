@@ -3,118 +3,172 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package club;
+package proyecto_club;
+import javax.swing.JOptionPane;
 
-import java.util.Scanner;
-
+/**
+ *
+ * @author Usuario
+ */
 public class Main {
-
     public static void main(String[] args) {
-        Club c = new Club();
+        club c = new club();
         Partner partner = null; // Inicializamos partner como null
-
-        Scanner sc = new Scanner(System.in);
-        String option;
         boolean switche = true;
 
         while (switche) {
-            principalMenu();
-            option = sc.nextLine();
+            String option = JOptionPane.showInputDialog(null, principalMenu(), "Club Social", JOptionPane.QUESTION_MESSAGE);
+
+            if (option != null) {
+                switch (option) {
+                    case "a":
+                        if (partner != null) {
+                            ingresarSocio(c, partner);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Debes inscribirte primero como socio.");
+                        }
+                        break;
+
+                    case "b":
+                        partner = registrarNuevoSocio(c);
+                        break;
+
+                    case "c":
+                        String cedulaBuscar = JOptionPane.showInputDialog(null, "Ingresa la cédula del socio:");
+                        c.searchPartner(cedulaBuscar);
+                        break;
+
+                    case "d":
+                        c.showInfoPartners();
+                        break;
+
+                    case "e":
+                        String cedulaEliminar = JOptionPane.showInputDialog(null, "Ingresa la cédula del socio:");
+                        c.deletePartner(cedulaEliminar);
+                        break;
+
+                    case "f":
+                        JOptionPane.showMessageDialog(null, "¡Gracias por visitar el club! Hasta luego.");
+                        switche = false;
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opción no válida. Inténtalo de nuevo.");
+                        break;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "¡Gracias por visitar el club! Hasta luego.");
+                switche = false;
+            }
+        }
+    }
+
+    public static void ingresarSocio(club c, Partner partner) {
+    String cedulaIngresar = JOptionPane.showInputDialog(null, "Ingresa tu cédula de socio:");
+
+    if (c.login(cedulaIngresar)) {
+        boolean stayInPartnerMenu = true;  // Variable para controlar el bucle del menú de socios
+
+        while (stayInPartnerMenu) {
+            String option = JOptionPane.showInputDialog(null, partnerMenu(), "Opciones de socio", JOptionPane.QUESTION_MESSAGE);
+
             switch (option) {
                 case "a":
-                    // Solo llamamos a ingresarSocio si partner no es null
-                    if (partner != null) {
-                        ingresarSocio(sc, c, partner);
-                    } else {
-                        System.out.println("Debes inscribirte primero como socio.");
-                    }
+                    String cedulaAfiliado = JOptionPane.showInputDialog(null, "Ingresa la cédula del afiliado:");
+                    String nameAfiliado = JOptionPane.showInputDialog(null, "Ingresa el nombre del afiliado:");
+                    
+
+                    Affiliate newAffiliate = new Affiliate(cedulaAfiliado, nameAfiliado, partner.getTypeSubscription(), partner);
+                    partner.addAffiliate(newAffiliate);
                     break;
 
                 case "b":
-                    partner = registrarNuevoSocio(sc, c); // Asignamos el nuevo socio a partner
+                    String itemInvoice = JOptionPane.showInputDialog(null, "Ingresa el concepto de la factura:");
+                    float valueInvoice = Float.parseFloat(JOptionPane.showInputDialog(null, "Ingresa el valor de la factura:"));
+                    Invoice newInvoice = new Invoice(partner.getInvoices().size() + 1, itemInvoice, valueInvoice, partner.getNameMember());
+                    partner.registerConsumption(newInvoice);
                     break;
 
                 case "c":
-                    System.out.println("Ingresa la cedula del socio: ");
-                    String cedula = sc.nextLine();
-                    c.searchPartner(cedula);
+                    double fundsToAdd = Double.parseDouble(JOptionPane.showInputDialog(null, "Ingresa la cantidad de fondos a añadir:"));
+                    partner.addFunds(fundsToAdd);
                     break;
 
                 case "d":
-                    System.out.println("Opcion aún no configurada");
+                    partner.showAllInvoices();  // Mostrar facturas pendientes y pagadas
                     break;
 
                 case "e":
-                    System.out.println("¡Gracias por visitar el club! Hasta luego.");
-                    switche = false;
+                    String invoiceIdToPay = JOptionPane.showInputDialog(null, "Ingresa el ID de la factura que deseas pagar:");
+                    int invoiceId = Integer.parseInt(invoiceIdToPay);
+
+                    // Buscar la factura por ID
+                    Invoice invoiceToPay = partner.findInvoiceById(invoiceId);
+
+                    if (invoiceToPay != null) {
+                        partner.payInvoice(invoiceToPay);  // Pagar la factura encontrada
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Factura no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    break;
+
+                case "f":
+                    String affiliateId = JOptionPane.showInputDialog(null, "Ingresa la cédula del afiliado a eliminar:");
+                    partner.removeAffiliate(affiliateId);  // Eliminar afiliado (verifica facturas pendientes)
+                    break;
+
+                case "g":
+                    JOptionPane.showMessageDialog(null, "Saliendo del menú de socio.");
+                    stayInPartnerMenu = false;  // Rompe el bucle para salir del menú de socios
                     break;
 
                 default:
-                    System.out.println("Opción no válida. Inténtalo de nuevo.");
-            }
-        }
-    }
-
-    public static void ingresarSocio(Scanner sc, Club c, Partner partner) {
-        System.out.println("Ingresa tu cedula de socio: ");
-        String cedula = sc.nextLine();
-
-        if (c.login(cedula)) {
-            partnerMenu();
-            String option = sc.nextLine();
-            switch (option) {
-                case "a":
-                    System.out.println("Ingresa la cedula del afiliado: ");
-                    cedula = sc.nextLine();
-                    System.out.println("Ingresa tu nombre: ");
-                    String nameMember = sc.nextLine();
-                    Affiliate affiliate = new Affiliate(cedula, nameMember, partner.getTypeSubscription(), partner);
-                    partner.addAffiliate(affiliate);
-                    break;
-                case "b":
-                    System.out.println("Ingresa el monto a aumentar en fondos: ");
-                    double funds = sc.nextDouble();
-                    sc.nextLine(); // Limpiar el buffer
-                    partner.addFuns(funds);
-                    break;
-                case "c":
+                    JOptionPane.showMessageDialog(null, "Opción no válida. Inténtalo de nuevo.");
                     break;
             }
-        } else {
-            System.out.println("La cedula ingresada no existe dentro del club.");
         }
-    }
-
-    public static Partner registrarNuevoSocio(Scanner sc, Club c) {
-        System.out.println("Ingresa tu cedula: ");
-        String cedula = sc.nextLine();
-        System.out.println("Ingresa tu nombre: ");
-        String nameMember = sc.nextLine();
-        System.out.println("Ingresa el tipo de suscripción (Regular/VIP): ");
-        String typeSubscription = sc.nextLine();
-
-        // Crear el nuevo socio
-        Partner partner = new Partner(cedula, nameMember, typeSubscription);
-        c.addPartner(partner);
-        return partner; // Retornamos el nuevo socio
-    }
-
-    public static void principalMenu() {
-        System.out.println("=============Bienvenido al club===============");
-        System.out.println("a. Ingresar");
-        System.out.println("b. Inscribir socio");
-        System.out.println("c. Buscar socio");
-        System.out.println("d. Ver socios");
-        System.out.println("e. Salir");
-        System.out.println("Elige una opción: ");
-    }
-
-    public static void partnerMenu() {
-        System.out.println("=============Bienvenido================");
-        System.out.println("a. Afiliar socio");
-        System.out.println("b. Aumentar fondos");
-        System.out.println("c. Pagar factura");
-        System.out.println("d. Regresar");
-        System.out.println("Elige una opción: ");
+    } else {
+        JOptionPane.showMessageDialog(null, "Cédula incorrecta. Inténtalo de nuevo.");
     }
 }
+
+
+    public static Partner registrarNuevoSocio(club c) {
+        String cedula = JOptionPane.showInputDialog(null, "Ingresa la cédula del nuevo socio:");
+        String nameMember = JOptionPane.showInputDialog(null, "Ingresa el nombre del nuevo socio:");
+        String typeSubscription = JOptionPane.showInputDialog(null, "Ingresa el tipo de suscripción (VIP/Regular):");
+
+        Partner newPartner;
+        if (typeSubscription.equalsIgnoreCase("VIP")) {
+            newPartner = new ViPPartner(cedula, nameMember);
+        } else {
+            newPartner = new RegularPartner(cedula, nameMember);
+        }
+
+        c.addPartner(newPartner);
+        return newPartner; // Retorna el socio recién creado
+    }
+
+    public static String principalMenu() {
+        return "Menú Principal:\n" +
+                "a. Ingresar como socio\n" +
+                "b. Registrar nuevo socio\n" +
+                "c. Buscar socio\n" +
+                "d. Mostrar información de socios\n" +
+                "e. Eliminar socio\n" +
+                "f. Salir";
+    }
+
+    public static String partnerMenu() {
+        return "Menú de Socio:\n" +
+                "a. Añadir afiliado\n" +
+                "b. Registrar consumo\n" +
+                "c. Añadir fondos\n" +
+                "d. Mostrar facturas\n" +
+                "e. Pagar factura\n" +
+                "f. Eliminar afiliado\n" +
+                "g. Salir";
+    }
+}
+
+

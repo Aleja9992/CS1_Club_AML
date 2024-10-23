@@ -1,22 +1,40 @@
-package club;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package proyecto_club;
 
 /**
  *
  * @author Usuario
  */
-public class Affiliate extends Partner {
-    protected Partner partner; // Referencia al socio (Partner) al que pertenece este afiliado
+public class Affiliate {
+    protected String cedula;  // Cédula del afiliado
+    protected String nameMember;  // Nombre del afiliado
+    protected String typeSubscription;  // Tipo de suscripción
+    protected Partner partner;  // Socio asociado
 
-    // Constructor de la clase Affiliate
+    // Constructor
     public Affiliate(String cedula, String nameMember, String typeSubscription, Partner partner) {
-        super(cedula, nameMember, typeSubscription); // Llama al constructor de la clase base Partner para inicializar cédula, nombre y tipo de suscripción
-        this.partner = partner; // Asigna el socio correspondiente a este afiliado
+        this.cedula = cedula;
+        this.nameMember = nameMember;
+        this.typeSubscription = typeSubscription;
+        this.partner = partner;
+    }
+
+    // Método para obtener la cédula del afiliado
+    public String getCedula() {
+        return cedula;
+    }
+
+    // Método para obtener el nombre del afiliado
+    public String getNameMember() {
+        return nameMember;
+    }
+
+   
+    Object getcedula() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
-
