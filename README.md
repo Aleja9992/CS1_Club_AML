@@ -13,7 +13,7 @@ Instrucciones de Compilación y Ejecución:
 -Clonar el Repositorio
 
 -Copiar código
--git clone 
+-git clone https://github.com/Aleja9992/CS1_Club_AML.git
 
 -Compilar el Proyecto:
 -Abre el proyecto en un IDE compatible con Java (NetBeans, IntelliJ, Eclipse, etc.).
@@ -36,7 +36,7 @@ Requerimientos del Proyecto:
 -Otros:
   Git: Para control de versiones y gestión del repositorio en GitHub.
 
--Licencia:
+-Licencia: MIT
 
 
 
