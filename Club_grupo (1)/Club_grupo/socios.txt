@@ -1,0 +1,11 @@
+1004365467,Miguel,VIP,85000.0
+afiliado,1004,Juan
+afiliado,10043,David
+afiliado,100436,Johan
+afiliado,1004365,Angel
+afiliado,100436546,Angela
+factura,1,Agua,15000.0,Miguel
+1004350192,Miguel,Regular,50000.0
+afiliado,1500,Isa
+1004350,Sandra,Regular,20000.0
+
